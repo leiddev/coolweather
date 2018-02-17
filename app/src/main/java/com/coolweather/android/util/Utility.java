@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by ld-1 on 2018/2/8.
  */
@@ -87,5 +89,15 @@ public class Utility {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static int getResourceId(String variableName, Class<?> c) {
+        try {
+            Field idField = c.getDeclaredField(variableName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 }

@@ -16,18 +16,81 @@ public class Suggestion {
 
     public Sport sport;
 
+    public Air air;
+
+    @SerializedName("drsg")
+    public Dressing dressing;
+
+    @SerializedName("flu")
+    public Influenza influenza;
+
+    @SerializedName("trav")
+    public Travel travel;
+
+    @SerializedName("uv")
+    public Ultravioletray ultravioletray;
+
     public class Comfort{
         @SerializedName("txt")
         public String info;
+
+        @SerializedName("brf")
+        public String brief;
     }
 
     public class CarWash{
         @SerializedName("txt")
         public String info;
+
+        @SerializedName("brf")
+        public String brief;
     }
 
     public class Sport{
         @SerializedName("txt")
         public String info;
+
+        @SerializedName("brf")
+        public String brief;
+    }
+
+    public class Air{
+        @SerializedName("txt")
+        public String info;
+
+        @SerializedName("brf")
+        public String brief;
+    }
+
+    public class Dressing{
+        @SerializedName("txt")
+        public String info;
+
+        @SerializedName("brf")
+        public String brief;
+    }
+
+    public class Influenza{
+        @SerializedName("txt")
+        public String info;
+
+        @SerializedName("brf")
+        public String brief;
+    }
+
+    public class Travel{
+        @SerializedName("txt")
+        public String info;
+
+        @SerializedName("brf")
+        public String brief;
+    }
+
+    public class Ultravioletray{
+        @SerializedName("txt")
+        public String info;
+
+        @SerializedName("brf")
+        public String brief;
     }
 }

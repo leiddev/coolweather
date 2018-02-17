@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +28,7 @@ import com.coolweather.android.util.Utility;
 
 import java.io.IOException;
 
+import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
@@ -50,6 +51,7 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView carWashText;
     private TextView sportText;
     private ImageView bingPicImg;
+    private ImageView weatherIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
+        weatherIcon = (ImageView) findViewById(R.id.weather_icon);
 
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
@@ -188,6 +191,7 @@ public class WeatherActivity extends AppCompatActivity {
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
+        loadWeatherIcon(weather, weatherIcon);
 
         forecastLayout.removeAllViews();
         for (Forecast forecast : weather.forecastList) {
@@ -221,5 +225,14 @@ public class WeatherActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, AutoUpdateService.class);
         startService(intent);
+    }
+
+    private void loadWeatherIcon(Weather weather, ImageView imageView) {
+        String weatherCode = weather.now.more.infoCode;
+        int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
+        Glide.with(this)
+                .load(weatherCodeResId)
+                .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
+                .into(imageView);
     }
 }
