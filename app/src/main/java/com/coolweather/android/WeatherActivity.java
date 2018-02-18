@@ -50,6 +50,11 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView comfortText;
     private TextView carWashText;
     private TextView sportText;
+    private TextView airText;
+    private TextView dressingText;
+    private TextView influenzaText;
+    private TextView travelText;
+    private TextView ultravioletrayText;
     private ImageView bingPicImg;
     private ImageView weatherIcon;
 
@@ -78,6 +83,11 @@ public class WeatherActivity extends AppCompatActivity {
         comfortText = (TextView) findViewById(R.id.comfort_text);
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
+        airText = (TextView) findViewById(R.id.air_text);
+        dressingText = (TextView) findViewById(R.id.dressing_text);
+        influenzaText = (TextView) findViewById(R.id.influenza_text);
+        travelText = (TextView) findViewById(R.id.travel_text);
+        ultravioletrayText = (TextView) findViewById(R.id.ultravioletray_text);
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         weatherIcon = (ImageView) findViewById(R.id.weather_icon);
 
@@ -213,13 +223,23 @@ public class WeatherActivity extends AppCompatActivity {
             pm25Text.setText(weather.aqi.city.pm25);
         }
 
-        String comfort = "舒适度：" + weather.suggestion.comfort.info;
-        String carWash = "洗车指数：" + weather.suggestion.carWash.info;
-        String sport = "运动建议：" + weather.suggestion.sport.info;
+        String comfort = "舒适度：" + weather.suggestion.comfort.brief + "\n" + weather.suggestion.comfort.info;
+        String carWash = "洗车指数：" + weather.suggestion.carWash.brief + "\n" + weather.suggestion.carWash.info;
+        String sport = "运动建议：" + weather.suggestion.sport.brief + "\n" + weather.suggestion.sport.info;
+        String air = "空气质量：" + weather.suggestion.air.brief + "\n" + weather.suggestion.air.info;
+        String dressing = "穿衣建议：" + weather.suggestion.dressing.brief + "\n" + weather.suggestion.dressing.info;
+        String influenza = "感冒指数：" + weather.suggestion.influenza.brief + "\n" + weather.suggestion.influenza.info;
+        String travel = "旅游建议：" + weather.suggestion.travel.brief + "\n" + weather.suggestion.travel.info;
+        String ultravioletray = "紫外线强度：" + weather.suggestion.ultravioletray.brief + "\n" + weather.suggestion.ultravioletray.info;
 
         comfortText.setText(comfort);
         carWashText.setText(carWash);
         sportText.setText(sport);
+        airText.setText(air);
+        dressingText.setText(dressing);
+        influenzaText.setText(influenza);
+        travelText.setText(travel);
+        ultravioletrayText.setText(ultravioletray);
 
         weatherLayout.setVisibility(View.VISIBLE);
 
