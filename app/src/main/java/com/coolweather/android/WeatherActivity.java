@@ -45,8 +45,14 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView degreeText;
     private TextView weatherInfoText;
     private LinearLayout forecastLayout;
+    private TextView airQualityText;
     private TextView aqiText;
     private TextView pm25Text;
+    private TextView pm10Text;
+    private TextView no2Text;
+    private TextView so2Text;
+    private TextView coText;
+    private TextView o3Text;
     private TextView comfortText;
     private TextView carWashText;
     private TextView sportText;
@@ -78,8 +84,16 @@ public class WeatherActivity extends AppCompatActivity {
         degreeText = (TextView) findViewById(R.id.degree_text);
         weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
         forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
+
+        airQualityText = (TextView) findViewById(R.id.air_quality_text);
         aqiText = (TextView) findViewById(R.id.aqi_text);
         pm25Text = (TextView) findViewById(R.id.pm25_text);
+        pm10Text = (TextView) findViewById(R.id.pm10_text);
+        no2Text = (TextView) findViewById(R.id.no2_text);
+        so2Text = (TextView) findViewById(R.id.so2_text);
+        coText = (TextView) findViewById(R.id.co_text);
+        o3Text = (TextView) findViewById(R.id.o3_text);
+
         comfortText = (TextView) findViewById(R.id.comfort_text);
         carWashText = (TextView) findViewById(R.id.car_wash_text);
         sportText = (TextView) findViewById(R.id.sport_text);
@@ -88,6 +102,7 @@ public class WeatherActivity extends AppCompatActivity {
         influenzaText = (TextView) findViewById(R.id.influenza_text);
         travelText = (TextView) findViewById(R.id.travel_text);
         ultravioletrayText = (TextView) findViewById(R.id.ultravioletray_text);
+
         bingPicImg = (ImageView) findViewById(R.id.bing_pic_img);
         weatherIcon = (ImageView) findViewById(R.id.weather_icon);
 
@@ -219,8 +234,19 @@ public class WeatherActivity extends AppCompatActivity {
         }
 
         if (weather.aqi != null) {
+            airQualityText.setText(weather.aqi.city.quality);
+            if (airQualityText.getText().length() == 1) {
+                airQualityText.setTextSize(35);
+            } else {
+                airQualityText.setTextSize(25);
+            }
             aqiText.setText(weather.aqi.city.aqi);
             pm25Text.setText(weather.aqi.city.pm25);
+            pm10Text.setText(weather.aqi.city.pm10);
+            no2Text.setText(weather.aqi.city.no2);
+            so2Text.setText(weather.aqi.city.so2);
+            coText.setText(weather.aqi.city.co);
+            o3Text.setText(weather.aqi.city.o3);
         }
 
         String comfort = "舒适度：" + weather.suggestion.comfort.brief + "\n" + weather.suggestion.comfort.info;
