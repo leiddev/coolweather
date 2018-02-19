@@ -24,9 +24,14 @@ import com.coolweather.android.gson.Forecast;
 import com.coolweather.android.gson.Weather;
 import com.coolweather.android.service.AutoUpdateService;
 import com.coolweather.android.util.HttpUtil;
+import com.coolweather.android.util.TimeUtility;
 import com.coolweather.android.util.Utility;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import okhttp3.Call;
@@ -128,8 +133,21 @@ public class WeatherActivity extends AppCompatActivity {
         String weatherString = prefs.getString("weather", null);
         if (weatherString != null) {
             Weather weather = Utility.handleWeatherResponse(weatherString);
-            mWeatherId = weather.basic.weatherId;
-            showWeatherInfo(weather);
+            if (weather != null) {
+                mWeatherId = weather.basic.weatherId;
+
+                String updateTime = weather.basic.update.updateTime + ":00";
+                String oneHourBeforeTime = TimeUtility.getLongTime(-1);
+                if (TimeUtility.isDateOneBigger(updateTime, oneHourBeforeTime)) {
+                    showWeatherInfo(weather);
+                } else {    // 距离上次更新超过1小时
+                    requestWeather(mWeatherId);
+                }
+            } else {
+                mWeatherId = getIntent().getStringExtra("weather_id");
+                weatherLayout.setVisibility(View.INVISIBLE);
+                requestWeather(mWeatherId);
+            }
         } else {
             mWeatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
@@ -179,7 +197,7 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (weather != null & "ok".equals(weather.status)) {
+                        if (weather != null & weather.status != null & "ok".equals(weather.status)) {
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
@@ -232,7 +250,7 @@ public class WeatherActivity extends AppCompatActivity {
         String pressure = "气压 " + weather.now.pressure + "hpa";
         String visibility = "能见度 " +weather.now.visibility + "km";
         String windInfo = weather.now.wind.direction + " "
-                + weather.now.wind.scale + " "
+                + weather.now.wind.scale + "级 "
                 + weather.now.wind.speed + "km/h";
 
         titleCity.setText(cityName);
@@ -303,7 +321,31 @@ public class WeatherActivity extends AppCompatActivity {
     }
 
     private void loadWeatherIcon(Weather weather, ImageView imageView) {
+        boolean nightFlag = false;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date date = sdf.parse(weather.basic.update.updateTime);
+            Calendar cd = sdf.getCalendar();
+            if (cd.get(Calendar.HOUR_OF_DAY) >= 18 || cd.get(Calendar.HOUR_OF_DAY) < 6) {
+                nightFlag = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         String weatherCode = weather.now.more.infoCode;
+        if (nightFlag) {
+            try {
+                int infoCode = Integer.parseInt(weatherCode);
+                if (infoCode == 100 || infoCode == 103 || infoCode == 104 || infoCode == 300
+                        || infoCode == 301 || infoCode == 406 || infoCode == 407) {
+                    weatherCode += "n";
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
         int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
         Glide.with(this)
                 .load(weatherCodeResId)
