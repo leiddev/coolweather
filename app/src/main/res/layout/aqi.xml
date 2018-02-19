@@ -128,7 +128,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="PM10"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 
@@ -158,7 +159,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="二氧化氮"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 
@@ -188,7 +190,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="二氧化硫"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 
@@ -218,7 +221,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="一氧化碳"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 
@@ -248,7 +252,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:text="臭氧"
-                    android:textColor="#fff"/>
+                    android:textColor="#fff"
+                    android:textSize="10sp"/>
 
             </LinearLayout>
 

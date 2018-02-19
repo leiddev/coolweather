@@ -45,6 +45,21 @@
 
                     <include layout="@layout/suggestion"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="10sp"
+                        android:textColor="#fff"
+                        android:text="气象信息由和风天气(HeWeather)提供"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:textSize="10sp"
+                        android:textColor="#fff"
+                        android:text="背景图片由必应搜索(bing)提供"/>
                 </LinearLayout>
 
             </ScrollView>

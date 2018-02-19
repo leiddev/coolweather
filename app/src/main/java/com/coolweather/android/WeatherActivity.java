@@ -33,6 +33,8 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.coolweather.android.R.id.precipitation;
+
 public class WeatherActivity extends AppCompatActivity {
 
     public DrawerLayout drawerLayout;
@@ -44,6 +46,12 @@ public class WeatherActivity extends AppCompatActivity {
     private TextView titleUpdateTime;
     private TextView degreeText;
     private TextView weatherInfoText;
+    private TextView feltTemperatureText;
+    private TextView humidityText;
+    private TextView precipitationText;
+    private TextView pressureText;
+    private TextView visibilityText;
+    private TextView windInfoText;
     private LinearLayout forecastLayout;
     private TextView airQualityText;
     private TextView aqiText;
@@ -81,9 +89,16 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
         titleCity = (TextView) findViewById(R.id.title_city);
         titleUpdateTime = (TextView) findViewById(R.id.title_update_time);
+
         degreeText = (TextView) findViewById(R.id.degree_text);
         weatherInfoText = (TextView) findViewById(R.id.weather_info_text);
         forecastLayout = (LinearLayout) findViewById(R.id.forecast_layout);
+        feltTemperatureText = (TextView) findViewById(R.id.felt_temperature);
+        humidityText = (TextView) findViewById(R.id.humidity);
+        precipitationText  = (TextView) findViewById(precipitation);
+        pressureText  = (TextView) findViewById(R.id.pressure);
+        visibilityText = (TextView) findViewById(R.id.visibility);
+        windInfoText  = (TextView) findViewById(R.id.wind_info);
 
         airQualityText = (TextView) findViewById(R.id.air_quality_text);
         aqiText = (TextView) findViewById(R.id.aqi_text);
@@ -211,12 +226,26 @@ public class WeatherActivity extends AppCompatActivity {
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "°C";
         String weatherInfo = weather.now.more.info;
+        String feltTemperature = "体感温度 " + weather.now.feltAirTemperature + "°C";
+        String humidity = "相对湿度 " + weather.now.humidity + "%";
+        String precipitation = "降水  " + weather.now.precipitation + "mm";
+        String pressure = "气压 " + weather.now.pressure + "hpa";
+        String visibility = "能见度 " +weather.now.visibility + "km";
+        String windInfo = weather.now.wind.direction + " "
+                + weather.now.wind.scale + " "
+                + weather.now.wind.speed + "km/h";
 
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
         degreeText.setText(degree);
         weatherInfoText.setText(weatherInfo);
         loadWeatherIcon(weather, weatherIcon);
+        feltTemperatureText.setText(feltTemperature);
+        humidityText.setText(humidity);
+        precipitationText.setText(precipitation);
+        pressureText.setText(pressure);
+        visibilityText.setText(visibility);
+        windInfoText.setText(windInfo);
 
         forecastLayout.removeAllViews();
         for (Forecast forecast : weather.forecastList) {
