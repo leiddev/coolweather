@@ -50,4 +50,43 @@ public class TimeUtility {
         }
         return isBigger;
     }
+
+    /**
+     *获取日期对应的星期
+     * @param date 要解析的日期
+     * @return
+     */
+    public static String getWeekday(Date date){
+        Calendar c = Calendar.getInstance(); // 当时的日期和时间
+        c.setTime(date);
+        String weekdayString;
+        switch (c.get(Calendar.DAY_OF_WEEK)) {
+            case 1:
+                weekdayString = "星期日";
+                break;
+            case 2:
+                weekdayString = "星期一";
+                break;
+            case 3:
+                weekdayString = "星期二";
+                break;
+            case 4:
+                weekdayString = "星期三";
+                break;
+            case 5:
+                weekdayString = "星期四";
+                break;
+            case 6:
+                weekdayString = "星期五";
+                break;
+            case 7:
+                weekdayString = "星期六";
+                break;
+            default:
+                weekdayString = null;
+                break;
+        }
+
+        return weekdayString;
+    }
 }

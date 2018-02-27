@@ -32,6 +32,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import okhttp3.Call;
@@ -270,13 +271,17 @@ public class WeatherActivity extends AppCompatActivity {
             View view = LayoutInflater.from(this).inflate(R.layout.forecast_item, forecastLayout, false);
             TextView dateText = (TextView) view.findViewById(R.id.date_text);
             TextView infoText = (TextView) view.findViewById(R.id.info_text);
+            ImageView infoImage = (ImageView) view.findViewById(R.id.info_image);
+            TextView precipitationProbText = (TextView) view.findViewById(R.id.precipitation_prob);
             TextView maxText = (TextView) view.findViewById(R.id.max_text);
             TextView minText = (TextView) view.findViewById(R.id.min_text);
 
-            dateText.setText(forecast.date);
+            dateText.setText(forecast.date + "\n" + getDateHint(forecast.date));
             infoText.setText(forecast.more.info);
-            maxText.setText(forecast.temperature.max);
-            minText.setText(forecast.temperature.min);
+            loadWeatherIcon(forecast, infoImage);
+            precipitationProbText.setText(forecast.precipitationProbability + "%降水");
+            maxText.setText(forecast.temperature.max + "°C");
+            minText.setText(forecast.temperature.min + "°C");
             forecastLayout.addView(view);
         }
 
@@ -351,5 +356,48 @@ public class WeatherActivity extends AppCompatActivity {
                 .load(weatherCodeResId)
                 .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
                 .into(imageView);
+    }
+
+    private void loadWeatherIcon(Forecast forecast, ImageView imageView) {
+        String weatherCode = forecast.more.infoCode;
+        int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
+        Glide.with(this)
+                .load(weatherCodeResId)
+                .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
+                .into(imageView);
+    }
+
+    private String getDateHint(String dateString) {
+        String hintString = null;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
+            Date date = sdf.parse(dateString);
+            long delta = date.getTime() / (24 * 3600 * 1000) - System.currentTimeMillis() / (24 * 3600 * 1000);
+            switch ((int)delta) {
+                case -2:
+                    hintString = "前天";
+                    break;
+                case -1:
+                    hintString = "昨天";
+                    break;
+                case 0:
+                    hintString = "今天";
+                    break;
+                case 1:
+                    hintString = "明天";
+                    break;
+                case 2:
+                    hintString = "后天";
+                    break;
+                default:
+                    hintString = TimeUtility.getWeekday(date);
+                    break;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return hintString;
     }
 }
