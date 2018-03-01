@@ -32,7 +32,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
 import okhttp3.Call;
@@ -145,12 +144,14 @@ public class WeatherActivity extends AppCompatActivity {
                     requestWeather(mWeatherId);
                 }
             } else {
-                mWeatherId = getIntent().getStringExtra("weather_id");
+                //mWeatherId = getIntent().getStringExtra("weather_id");
+                mWeatherId = prefs.getString("weather_id", null);
                 weatherLayout.setVisibility(View.INVISIBLE);
                 requestWeather(mWeatherId);
             }
         } else {
-            mWeatherId = getIntent().getStringExtra("weather_id");
+            //mWeatherId = getIntent().getStringExtra("weather_id");
+            mWeatherId = prefs.getString("weather_id", null);
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(mWeatherId);
         }
@@ -182,10 +183,11 @@ public class WeatherActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 e.printStackTrace();
+                final String errorMessage = e.getMessage();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(WeatherActivity.this, "获取天气信息失败: " + errorMessage, Toast.LENGTH_LONG).show();
                         swipeRefresh.setRefreshing(false);
                     }
                 });
@@ -198,14 +200,16 @@ public class WeatherActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (weather != null & weather.status != null & "ok".equals(weather.status)) {
+                        if (weather == null) {
+                            Toast.makeText(WeatherActivity.this, "获取天气信息失败: " + responseText, Toast.LENGTH_LONG).show();
+                        } else if ("ok".equals(weather.status)) {
                             SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
                             mWeatherId = weather.basic.weatherId;
                             showWeatherInfo(weather);
                         } else {
-                            Toast.makeText(WeatherActivity.this, "获取天气信息失败", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(WeatherActivity.this, "获取天气信息失败: status:" + weather.status, Toast.LENGTH_LONG).show();
                         }
                         swipeRefresh.setRefreshing(false);
                     }
@@ -371,9 +375,10 @@ public class WeatherActivity extends AppCompatActivity {
         String hintString = null;
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
             Date date = sdf.parse(dateString);
-            long delta = date.getTime() / (24 * 3600 * 1000) - System.currentTimeMillis() / (24 * 3600 * 1000);
+            Date dateNow = sdf.parse(TimeUtility.getNowTime());
+            long delta = TimeUtility.getDaysBetween(dateNow, date);
+
             switch ((int)delta) {
                 case -2:
                     hintString = "前天";

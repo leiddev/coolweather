@@ -1,6 +1,7 @@
 package com.coolweather.android.util;
 
 import android.util.Log;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -11,6 +12,16 @@ import java.util.Date;
  */
 
 public class TimeUtility {
+
+    /**
+     * 获取当前时间
+     * @return
+     */
+    public static String getNowTime(){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        return simpleDateFormat.format(date);
+    }
 
     /**
      *获取距现在某一小时的时刻
@@ -88,5 +99,23 @@ public class TimeUtility {
         }
 
         return weekdayString;
+    }
+
+    public static int getDaysBetween(Date startData, Date endData) {
+        Calendar fromCalendar = Calendar.getInstance();
+        fromCalendar.setTime(startData);
+        fromCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        fromCalendar.set(Calendar.MINUTE, 0);
+        fromCalendar.set(Calendar.SECOND, 0);
+        fromCalendar.set(Calendar.MILLISECOND, 0);
+
+        Calendar toCalendar = Calendar.getInstance();
+        toCalendar.setTime(endData);
+        toCalendar.set(Calendar.HOUR_OF_DAY, 0);
+        toCalendar.set(Calendar.MINUTE, 0);
+        toCalendar.set(Calendar.SECOND, 0);
+        toCalendar.set(Calendar.MILLISECOND, 0);
+
+        return (int)((toCalendar.getTimeInMillis() - fromCalendar.getTimeInMillis()) / (24 * 3600 * 1000));
     }
 }
