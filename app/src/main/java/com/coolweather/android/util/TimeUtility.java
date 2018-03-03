@@ -31,7 +31,7 @@ public class TimeUtility {
     public static String getLongTime(int hour){
         Calendar c = Calendar.getInstance(); // 当时的日期和时间
         int h; // 需要更改的小时
-        h = c.get(Calendar.HOUR_OF_DAY) - hour;
+        h = c.get(Calendar.HOUR_OF_DAY) + hour;
         c.set(Calendar.HOUR_OF_DAY, h);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Log.v("time",df.format(c.getTime()));
@@ -54,11 +54,16 @@ public class TimeUtility {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        if (dt1.getTime() > dt2.getTime()) {
-            isBigger = true;
-        } else if (dt1.getTime() < dt2.getTime()) {
-            isBigger = false;
+        try {
+            if (dt1.getTime() > dt2.getTime()) {
+                isBigger = true;
+            } else if (dt1.getTime() < dt2.getTime()) {
+                isBigger = false;
+            }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
         }
+
         return isBigger;
     }
 
@@ -72,25 +77,25 @@ public class TimeUtility {
         c.setTime(date);
         String weekdayString;
         switch (c.get(Calendar.DAY_OF_WEEK)) {
-            case 1:
+            case Calendar.SUNDAY:
                 weekdayString = "星期日";
                 break;
-            case 2:
+            case Calendar.MONDAY:
                 weekdayString = "星期一";
                 break;
-            case 3:
+            case Calendar.TUESDAY:
                 weekdayString = "星期二";
                 break;
-            case 4:
+            case Calendar.WEDNESDAY:
                 weekdayString = "星期三";
                 break;
-            case 5:
+            case Calendar.THURSDAY:
                 weekdayString = "星期四";
                 break;
-            case 6:
+            case Calendar.FRIDAY:
                 weekdayString = "星期五";
                 break;
-            case 7:
+            case Calendar.SATURDAY:
                 weekdayString = "星期六";
                 break;
             default:

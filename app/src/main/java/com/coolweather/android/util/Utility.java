@@ -2,6 +2,7 @@ package com.coolweather.android.util;
 
 import android.text.TextUtils;
 
+import com.coolweather.android.R;
 import com.coolweather.android.db.City;
 import com.coolweather.android.db.County;
 import com.coolweather.android.db.Province;
@@ -13,6 +14,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by ld-1 on 2018/2/8.
@@ -99,5 +104,35 @@ public class Utility {
             e.printStackTrace();
             return -1;
         }
+    }
+
+    public static int getWeatherCodeResId(Weather weather) {
+        boolean nightFlag = false;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            Date date = sdf.parse(weather.basic.update.updateTime);
+            Calendar cd = Calendar.getInstance();
+            cd.setTime(date);
+            if (cd.get(Calendar.HOUR_OF_DAY) >= 18 || cd.get(Calendar.HOUR_OF_DAY) < 6) {
+                nightFlag = true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        String weatherCode = weather.now.more.infoCode;
+        if (nightFlag) {
+            try {
+                int infoCode = Integer.parseInt(weatherCode);
+                if (infoCode == 100 || infoCode == 103 || infoCode == 104 || infoCode == 300
+                        || infoCode == 301 || infoCode == 406 || infoCode == 407) {
+                    weatherCode += "n";
+                }
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return getResourceId("weather_icon_" + weatherCode, R.drawable.class);
     }
 }

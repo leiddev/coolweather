@@ -30,7 +30,6 @@ import com.coolweather.android.util.Utility;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 import jp.wasabeef.glide.transformations.ColorFilterTransformation;
@@ -129,6 +128,24 @@ public class WeatherActivity extends AppCompatActivity {
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swipe_refresh);
         swipeRefresh.setColorSchemeResources(R.color.colorPrimary);
 
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestWeather(mWeatherId);
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         String weatherString = prefs.getString("weather", null);
         if (weatherString != null) {
@@ -155,19 +172,6 @@ public class WeatherActivity extends AppCompatActivity {
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(mWeatherId);
         }
-
-        navButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                requestWeather(mWeatherId);
-            }
-        });
 
         String bingPic = prefs.getString("bing_pic", null);
         if (bingPic != null) {
@@ -326,36 +330,12 @@ public class WeatherActivity extends AppCompatActivity {
         weatherLayout.setVisibility(View.VISIBLE);
 
         Intent intent = new Intent(this, AutoUpdateService.class);
+        intent.putExtra("show_notification", false);
         startService(intent);
     }
 
     private void loadWeatherIcon(Weather weather, ImageView imageView) {
-        boolean nightFlag = false;
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            Date date = sdf.parse(weather.basic.update.updateTime);
-            Calendar cd = sdf.getCalendar();
-            if (cd.get(Calendar.HOUR_OF_DAY) >= 18 || cd.get(Calendar.HOUR_OF_DAY) < 6) {
-                nightFlag = true;
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        String weatherCode = weather.now.more.infoCode;
-        if (nightFlag) {
-            try {
-                int infoCode = Integer.parseInt(weatherCode);
-                if (infoCode == 100 || infoCode == 103 || infoCode == 104 || infoCode == 300
-                        || infoCode == 301 || infoCode == 406 || infoCode == 407) {
-                    weatherCode += "n";
-                }
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
-        }
-
-        int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
+        int weatherCodeResId = Utility.getWeatherCodeResId(weather);
         Glide.with(this)
                 .load(weatherCodeResId)
                 .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
