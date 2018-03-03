@@ -153,8 +153,8 @@ public class WeatherActivity extends AppCompatActivity {
             if (weather != null) {
                 mWeatherId = weather.basic.weatherId;
 
-                String updateTime = weather.basic.update.updateTime + ":00";
-                String oneHourBeforeTime = TimeUtility.getLongTime(-1);
+                String updateTime = weather.basic.update.updateTimeUTC + ":00";
+                String oneHourBeforeTime = TimeUtility.getTimeOfHoursBeforeOrAfter(-1, "UTC");
                 if (TimeUtility.isDateOneBigger(updateTime, oneHourBeforeTime)) {
                     showWeatherInfo(weather);
                 } else {    // 距离上次更新超过1小时

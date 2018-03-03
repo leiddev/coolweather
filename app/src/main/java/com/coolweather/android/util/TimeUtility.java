@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by ld-1 on 2018/2/19.
@@ -15,7 +16,7 @@ public class TimeUtility {
 
     /**
      * 获取当前时间
-     * @return
+     * @return yyyy-MM-dd HH:mm:ss
      */
     public static String getNowTime(){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -26,14 +27,18 @@ public class TimeUtility {
     /**
      *获取距现在某一小时的时刻
      * @param hour hour=-1为上一个小时，hour=1为下一个小时
-     * @return
+     * @param timeZone 时区
+     * @return yyyy-MM-dd HH:mm:ss
      */
-    public static String getLongTime(int hour){
+    public static String getTimeOfHoursBeforeOrAfter(int hour, String timeZone) {
         Calendar c = Calendar.getInstance(); // 当时的日期和时间
+        c.setTimeZone(TimeZone.getTimeZone(timeZone));
+        c.setTimeInMillis(System.currentTimeMillis());
         int h; // 需要更改的小时
         h = c.get(Calendar.HOUR_OF_DAY) + hour;
         c.set(Calendar.HOUR_OF_DAY, h);
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone(timeZone));
         Log.v("time",df.format(c.getTime()));
         return df.format(c.getTime());
     }
@@ -41,7 +46,7 @@ public class TimeUtility {
      * 比较时间大小
      * @param str1：要比较的时间
      * @param str2：要比较的时间
-     * @return
+     * @return str1 > str2 时为 true
      */
     public static boolean isDateOneBigger(String str1, String str2) {
         boolean isBigger = false;
@@ -70,7 +75,7 @@ public class TimeUtility {
     /**
      *获取日期对应的星期
      * @param date 要解析的日期
-     * @return
+     * @return 星期X
      */
     public static String getWeekday(Date date){
         Calendar c = Calendar.getInstance(); // 当时的日期和时间
