@@ -14,7 +14,7 @@ public class Basic {
     @SerializedName("cnty")
     public String countryName;
 
-    @SerializedName("id")
+    @SerializedName("cid")
     public String weatherId;
 
     @SerializedName("lat")

@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -258,9 +259,9 @@ public class WeatherActivity extends AppCompatActivity {
         String precipitation = "降水  " + weather.now.precipitation + "mm";
         String pressure = "气压 " + weather.now.pressure + "hpa";
         String visibility = "能见度 " +weather.now.visibility + "km";
-        String windInfo = weather.now.wind.direction + " "
-                + weather.now.wind.scale + "级 "
-                + weather.now.wind.speed + "km/h";
+        String windInfo = weather.now.windDirection + " "
+                + weather.now.windScale + "级 "
+                + weather.now.windSpeed + "km/h";
 
         titleCity.setText(cityName);
         titleUpdateTime.setText(updateTime);
@@ -287,7 +288,11 @@ public class WeatherActivity extends AppCompatActivity {
             dateText.setText(forecast.date + "\n" + getDateHint(forecast.date));
             infoText.setText(forecast.more.info);
             loadWeatherIcon(forecast, infoImage);
-            precipitationProbText.setText(forecast.precipitationProbability + "%降水");
+            if (forecast.precipitationProbability != null) {
+                precipitationProbText.setText(forecast.precipitationProbability + "%降水");
+            } else {
+                precipitationProbText.setVisibility(View.GONE);
+            }
             maxText.setText(forecast.temperature.max + "°C");
             minText.setText(forecast.temperature.min + "°C");
             forecastLayout.addView(view);
@@ -302,30 +307,93 @@ public class WeatherActivity extends AppCompatActivity {
             }
             aqiText.setText(weather.aqi.city.aqi);
             pm25Text.setText(weather.aqi.city.pm25);
-            pm10Text.setText(weather.aqi.city.pm10);
-            no2Text.setText(weather.aqi.city.no2);
-            so2Text.setText(weather.aqi.city.so2);
-            coText.setText(weather.aqi.city.co);
-            o3Text.setText(weather.aqi.city.o3);
+            if (weather.aqi.city.pm10 != null) {
+                pm10Text.setText(weather.aqi.city.pm10);
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.pm10_layout);
+                layout.setVisibility(View.GONE);
+            }
+            if (weather.aqi.city.no2 != null) {
+                no2Text.setText(weather.aqi.city.no2);
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.no2_layout);
+                layout.setVisibility(View.GONE);
+            }
+            if (weather.aqi.city.so2 != null) {
+                so2Text.setText(weather.aqi.city.so2);
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.so2_layout);
+                layout.setVisibility(View.GONE);
+            }
+            if (weather.aqi.city.co != null) {
+                coText.setText(weather.aqi.city.co);
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.co_layout);
+                layout.setVisibility(View.GONE);
+            }
+            if (weather.aqi.city.o3 != null) {
+                o3Text.setText(weather.aqi.city.o3);
+            } else {
+                RelativeLayout layout = (RelativeLayout) findViewById(R.id.o3_layout);
+                layout.setVisibility(View.GONE);
+            }
         }
 
-        String comfort = "舒适度：" + weather.suggestion.comfort.brief + "\n" + weather.suggestion.comfort.info;
-        String carWash = "洗车指数：" + weather.suggestion.carWash.brief + "\n" + weather.suggestion.carWash.info;
-        String sport = "运动建议：" + weather.suggestion.sport.brief + "\n" + weather.suggestion.sport.info;
-        String air = "空气质量：" + weather.suggestion.air.brief + "\n" + weather.suggestion.air.info;
-        String dressing = "穿衣建议：" + weather.suggestion.dressing.brief + "\n" + weather.suggestion.dressing.info;
-        String influenza = "感冒指数：" + weather.suggestion.influenza.brief + "\n" + weather.suggestion.influenza.info;
-        String travel = "旅游建议：" + weather.suggestion.travel.brief + "\n" + weather.suggestion.travel.info;
-        String ultravioletray = "紫外线强度：" + weather.suggestion.ultravioletray.brief + "\n" + weather.suggestion.ultravioletray.info;
+        if (weather.suggestion.comfort != null) {
+            String comfort = "舒适度：" + weather.suggestion.comfort.brief + "\n" + weather.suggestion.comfort.info;
+            comfortText.setText(comfort);
+        } else {
+            comfortText.setVisibility(View.GONE);
+        }
 
-        comfortText.setText(comfort);
-        carWashText.setText(carWash);
-        sportText.setText(sport);
-        airText.setText(air);
-        dressingText.setText(dressing);
-        influenzaText.setText(influenza);
-        travelText.setText(travel);
-        ultravioletrayText.setText(ultravioletray);
+        if (weather.suggestion.carWash != null) {
+            String carWash = "洗车指数：" + weather.suggestion.carWash.brief + "\n" + weather.suggestion.carWash.info;
+            carWashText.setText(carWash);
+        } else {
+            carWashText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.sport != null) {
+            String sport = "运动建议：" + weather.suggestion.sport.brief + "\n" + weather.suggestion.sport.info;
+            sportText.setText(sport);
+        } else {
+            sportText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.air != null){
+            String air = "空气质量：" + weather.suggestion.air.brief + "\n" + weather.suggestion.air.info;
+            airText.setText(air);
+        } else {
+            airText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.dressing != null){
+            String dressing = "穿衣建议：" + weather.suggestion.dressing.brief + "\n" + weather.suggestion.dressing.info;
+            dressingText.setText(dressing);
+        } else {
+            dressingText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.influenza != null){
+            String influenza = "感冒指数：" + weather.suggestion.influenza.brief + "\n" + weather.suggestion.influenza.info;
+            influenzaText.setText(influenza);
+        } else {
+            influenzaText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.travel != null){
+            String travel = "旅游建议：" + weather.suggestion.travel.brief + "\n" + weather.suggestion.travel.info;
+            travelText.setText(travel);
+        } else {
+            travelText.setVisibility(View.GONE);
+        }
+
+        if (weather.suggestion.ultravioletray != null) {
+            String ultravioletray = "紫外线强度：" + weather.suggestion.ultravioletray.brief + "\n" + weather.suggestion.ultravioletray.info;
+            ultravioletrayText.setText(ultravioletray);
+        } else {
+            ultravioletrayText.setVisibility(View.GONE);
+        }
 
         weatherLayout.setVisibility(View.VISIBLE);
 
@@ -344,11 +412,13 @@ public class WeatherActivity extends AppCompatActivity {
 
     private void loadWeatherIcon(Forecast forecast, ImageView imageView) {
         String weatherCode = forecast.more.infoCode;
-        int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
-        Glide.with(this)
-                .load(weatherCodeResId)
-                .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
-                .into(imageView);
+        if (weatherCode != null) {
+            int weatherCodeResId = Utility.getResourceId("weather_icon_" + weatherCode, R.drawable.class);
+            Glide.with(this)
+                    .load(weatherCodeResId)
+                    .bitmapTransform(new ColorFilterTransformation(this, 0xFFFFFFFF))
+                    .into(imageView);
+        }
     }
 
     private String getDateHint(String dateString) {

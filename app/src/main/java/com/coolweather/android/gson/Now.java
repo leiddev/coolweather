@@ -29,6 +29,18 @@ public class Now {
     @SerializedName("cond")
     public More more;
 
+    @SerializedName("wind_deg")
+    public String windDegree;
+
+    @SerializedName("wind_dir")
+    public String windDirection;
+
+    @SerializedName("wind_sc")
+    public String windScale;
+
+    @SerializedName("wind_spd")
+    public String windSpeed;
+
     public Wind wind;
 
     public class More{

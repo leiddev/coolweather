@@ -40,7 +40,7 @@ public class AutoUpdateService extends Service {
         updateWeather(showNotification);
         updateBingPic();
         AlarmManager manager = (AlarmManager) getSystemService(ALARM_SERVICE);
-        int anHour = 4 * 60 * 60 * 1000;
+        int anHour = 6 * 60 * 60 * 1000;
         long triggerAtTime = SystemClock.elapsedRealtime() + anHour;
         Intent i = new Intent(this, AutoUpdateService.class);
         i.putExtra("show_notification", true);
@@ -48,14 +48,6 @@ public class AutoUpdateService extends Service {
         manager.cancel(pi);
         manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Intent intent = new Intent(this, AutoUpdateService.class);
-        intent.putExtra("show_notification", true);
-        startService(intent);
     }
 
     private void updateWeather(final boolean showNotification) {
